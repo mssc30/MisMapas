@@ -1,7 +1,6 @@
 package net.mssc.mismapas;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,8 +10,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,7 +26,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String KEY = "AIzaSyBHtYD_i3eqYqdCroUTQDwzb5FtqD323oc";
     SupportMapFragment mapFragment;
     GoogleMap mapa;
-    String ORIGEN = "Montreal";
-    String DESTINO;
+    String ORIGEN, DESTINO;
     SharedPreferences myPreferences;
 
     @Override
@@ -48,7 +43,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         myPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        DESTINO = myPreferences.getString("DIRECCION", "");
+        DESTINO = myPreferences.getString("DESTINO", "");
+        ORIGEN = myPreferences.getString("ORIGEN", "");
+
 
         //ADMINISTRADOR DE FRAGMENTOS DE MAP
         //BUSCA EL FRAGMENTO QUE SE LLAMA MAP (ESTA EN EL LAYOUT)
@@ -67,30 +64,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapa = googleMap;
 
         /**AGREGAR UN MARCADOR EN LA POSICION 0,0
-        mapa.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
+         mapa.addMarker(new MarkerOptions()
+         .position(new LatLng(0, 0))
+         .title("Marker"));
 
-        // Sets the map type to be "hybrid"
-        //mapa.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+         // Sets the map type to be "hybrid"
+         //mapa.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-        LatLng sydney = new LatLng(-33.852, 151.211);
-        mapa.addMarker(new MarkerOptions().
-                position(sydney).title("Marker in Sydney"));
+         LatLng sydney = new LatLng(-33.852, 151.211);
+         mapa.addMarker(new MarkerOptions().
+         position(sydney).title("Marker in Sydney"));
 
-        //ANIMACION PARA QUE EL MAPA SE HUBIQUE EN UN PUNTO. ALGO "BURDA"
-        //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(sydney);
-        //mapa.animateCamera(cameraUpdate);
+         //ANIMACION PARA QUE EL MAPA SE HUBIQUE EN UN PUNTO. ALGO "BURDA"
+         //CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(sydney);
+         //mapa.animateCamera(cameraUpdate);
 
-        //ANIMACION MAS PRO
-        CameraPosition cameraPosition = CameraPosition.builder().
-                target(new LatLng(20.139295, -101.150777))
-                .zoom(17) //ZOOM
-                .tilt(67) //INCLINACION
-                .bearing(90) //DIRECCION DE LA CAMARA EN GRADOS
-                .build();
+         //ANIMACION MAS PRO
+         CameraPosition cameraPosition = CameraPosition.builder().
+         target(new LatLng(20.139295, -101.150777))
+         .zoom(17) //ZOOM
+         .tilt(67) //INCLINACION
+         .bearing(90) //DIRECCION DE LA CAMARA EN GRADOS
+         .build();
 
-        mapa.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));**/
+         mapa.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));**/
 
         peticionRutas();
     }
@@ -100,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         final List<List<LatLng>> listaPoli = new ArrayList<>();
 
         //STRING DE LA PETICION A LA API DE DIRECCIONES
-        String URL_PETICION = "https://maps.googleapis.com/maps/api/directions/json?origin=" + ORIGEN +"&destination="+DESTINO+"&key=" + KEY;
+        String URL_PETICION = "https://maps.googleapis.com/maps/api/directions/json?origin=" + ORIGEN + "&destination=" + DESTINO + "&key=" + KEY;
 
         //REQUESTQUEUE PARA REALIZAR LA PETICION UNA VEZ CONSTRUIDA
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -146,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .title(ORIGEN));
 
                     mapa.addMarker(new MarkerOptions()
-                            .position(listaPoli.get(listaPoli.size()-1).get(listaPoli.get(listaPoli.size()-1).size()-1))
+                            .position(listaPoli.get(listaPoli.size() - 1).get(listaPoli.get(listaPoli.size() - 1).size() - 1))
                             .title(DESTINO));
 
                     //ANIMACION MAS PRO
